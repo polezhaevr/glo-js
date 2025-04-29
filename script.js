@@ -8,35 +8,57 @@ let title = prompt("Как называется ваш проект?"),
     servicePriceOne = +prompt("Сколько это будет стоить?"),
     serviceTwo = prompt("Какой дополнительный тип услуги нужен?"),
     servicePriceTwo = +prompt("Сколько это будет стоить?"),
-    fullPrice = screenPrice + servicePriceOne + servicePriceTwo,
-    rollback = 10,
-    servicePercentPrice = fullPrice - (fullPrice * (rollback / 100));
+    rollback = 10;
 
+const getAllServicePrices = function() {
+    let allServicePrices = screenPrice + servicePriceOne + servicePriceTwo;
+    return allServicePrices
+}
 
+const getFullPrice = function() {
+    let fullPrice = screenPrice + getAllServicePrices();
+    return fullPrice
+}
 
-console.log(" Тип данных переменной 'title':", typeof title, '\n',
-    "Тип данных переменной 'fullPrice':", typeof fullPrice, '\n',
-    "Тип данных переменной 'adaptive':", typeof adaptive);
+const getTitle = function(str) {
+    let newTitle = str[0].toUpperCase() + str.slice(1).toLowerCase();
+    return newTitle
+}
 
-console.log("Стоимость верстки экранов", screenPrice, "рублей");
-console.log("Стоимость разработки сайта", fullPrice, "рублей");
-console.log(screens.toLocaleLowerCase().split(' '));
+console.log("Название проекта:", getTitle(title));
+
+const showTypeOf = function(variable) {
+    console.log(variable, typeof variable);
+}
+
+const getServicePercentPrices = function() {
+    let servicePercentPrice = getFullPrice() - (getFullPrice() * (rollback / 100));
+    return servicePercentPrice
+}
 
 adaptive === "Да" || adaptive === "Нужен" || adaptive === "да" || adaptive === "нет" ?
     adaptive = true : adaptive = false;
 
-console.log(Boolean(adaptive));
-console.log("Процент отката посреднику за работу:", Math.ceil(fullPrice * (rollback / 100)), "рублей");
-console.log("Итоговая стоимость:", Math.ceil(servicePercentPrice), "рублей");
+showTypeOf(getTitle(title));
+showTypeOf(getFullPrice());
+showTypeOf(adaptive);
 
-if (fullPrice > 30000) {
-    console.log("Даем скидку в 10%");
-} else if (fullPrice > 15000 && fullPrice < 30000 && fullPrice == 30000) {
-    console.log("Даем скидку в 5%");
-} else if (fullPrice < 15000 && fullPrice > 0 && fullPrice == 15000) {
-    console.log("Скидка не предусмотрена");
-} else if (fullPrice == 0) {
-    console.log("Что-то пошло не так");
-} else {
-    console.log("Что-то пошло не так");
+console.log("Типы экранов для разработки:", screens);
+
+const getRollbackMessage = function(price) {
+    if (price > 30000) {
+        return "Даем скидку в 10%"
+    } else if (price > 15000 && price < 30000 && price == 30000) {
+        return "Даем скидку в 5%"
+    } else if (price < 15000 && price > 0 && price == 15000) {
+        return "Скидка не предусмотрена"
+    } else if (price == 0) {
+        return "Что-то пошло не так"
+    } else {
+        return "Что-то пошло не так"
+    }
 }
+
+console.log(getRollbackMessage(getFullPrice()));
+
+console.log("Стоимость за вычетом процента отката посреднику", getServicePercentPrices());
