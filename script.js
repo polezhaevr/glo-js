@@ -28,7 +28,7 @@ const getTitle = function(str) {
 console.log("Название проекта:", getTitle(title));
 
 const showTypeOf = function(variable) {
-    console.log(variable, typeof variable);
+    console.log("Тип переменной", variable, ':', typeof variable);
 }
 
 const getServicePercentPrices = function() {
@@ -44,7 +44,6 @@ showTypeOf(getFullPrice());
 showTypeOf(adaptive);
 
 console.log("Типы экранов для разработки:", screens);
-
 const getRollbackMessage = function(price) {
     if (price > 30000) {
         return "Даем скидку в 10%"
@@ -60,5 +59,4 @@ const getRollbackMessage = function(price) {
 }
 
 console.log(getRollbackMessage(getFullPrice()));
-
-console.log("Стоимость за вычетом процента отката посреднику", getServicePercentPrices());
+console.log("Стоимость за вычетом процента отката посреднику:", getServicePercentPrices());
