@@ -1,23 +1,24 @@
 'use strict'
 
-let title = prompt("Как называется ваш проект?"),
-    screens = prompt("Какие типы экранов нужно разработать?"),
-    screenPrice = +prompt("Сколько будет стоить данная работа?"),
-    adaptive = prompt("Нужен ли адаптив на сайте?"),
-    serviceOne = prompt("Какой дополнительный тип услуги нужен?"),
-    servicePriceOne = +prompt("Сколько это будет стоить?"),
-    serviceTwo = prompt("Какой дополнительный тип услуги нужен?"),
-    servicePriceTwo = +prompt("Сколько это будет стоить?"),
-    rollback = 10;
+let nameTitle = prompt("Как называется ваш проект?", "calc"),
+    screens = prompt("Какие типы экранов нужно разработать?", "mobile"),
+    screenPrice = +prompt("Сколько будет стоить данная работа?", 15650),
+    adaptive = prompt("Нужен ли адаптив на сайте?", "да"),
+    serviceOne = prompt("Какой дополнительный тип услуги нужен?", "css"),
+    servicePriceOne = +prompt("Сколько это будет стоить?", 650),
+    serviceTwo = prompt("Какой дополнительный тип услуги нужен?", "html"),
+    servicePriceTwo = +prompt("Сколько это будет стоить?", 700),
+    rollback = 10,
+    allServicePrices,
+    fullPrice,
+    servicePercentPrice;
 
 const getAllServicePrices = function() {
-    let allServicePrices = screenPrice + servicePriceOne + servicePriceTwo;
-    return allServicePrices
+    return screenPrice + servicePriceOne + servicePriceTwo
 }
 
 const getFullPrice = function() {
-    let fullPrice = screenPrice + getAllServicePrices();
-    return fullPrice
+    return screenPrice + allServicePrices
 }
 
 const getTitle = function(str) {
@@ -25,21 +26,25 @@ const getTitle = function(str) {
     return newTitle
 }
 
-console.log("Название проекта:", getTitle(title));
+console.log("Название проекта:", getTitle(nameTitle));
 
 const showTypeOf = function(variable) {
     console.log("Тип переменной", variable, ':', typeof variable);
 }
 
 const getServicePercentPrices = function() {
-    let servicePercentPrice = getFullPrice() - (getFullPrice() * (rollback / 100));
-    return servicePercentPrice
+    return fullPrice - (fullPrice * (rollback / 100))
 }
 
 adaptive === "Да" || adaptive === "Нужен" || adaptive === "да" || adaptive === "нет" ?
     adaptive = true : adaptive = false;
 
-showTypeOf(getTitle(title));
+
+allServicePrices = getAllServicePrices();
+fullPrice = getFullPrice();
+servicePercentPrice = getServicePercentPrices();
+
+showTypeOf(getTitle(nameTitle));
 showTypeOf(getFullPrice());
 showTypeOf(adaptive);
 
@@ -58,5 +63,5 @@ const getRollbackMessage = function(price) {
     }
 }
 
-console.log(getRollbackMessage(getFullPrice()));
-console.log("Стоимость за вычетом процента отката посреднику:", getServicePercentPrices());
+console.log(getRollbackMessage(fullPrice));
+console.log("Стоимость за вычетом процента отката посреднику:", servicePercentPrice);
