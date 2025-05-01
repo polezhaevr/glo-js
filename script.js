@@ -17,31 +17,37 @@ const getTitle = function(str) {
 }
 
 const isNumber = function(num) {
-    return !isNaN(parseFloat(num)) && isFinite(num);
+    if (num === null) return null;
+    const trimmed = num.trim();
+    if (!trimmed) return NaN;
+    const number = Number(trimmed);
+    return isNaN(number) ? NaN : number;
 }
 
 const asking = function() {
-    nameTitle = prompt("Как называется ваш проект?", "calc")
-    screens = prompt("Какие типы экранов нужно разработать?", "mobile")
+    nameTitle = prompt("Как называется ваш проект?", "calc");
+    screens = prompt("Какие типы экранов нужно разработать?", "mobile");
     do {
-        screenPrice = prompt("Сколько будет стоить данная работа?", 1000)
-    }
-    while (!isNumber(screenPrice))
-    adaptive = prompt("Нужен ли адаптив на сайте?", "да")
+        const input = prompt("Сколько будет стоить данная работа?", 1000);
+        screenPrice = isNumber(input);
+    } while (screenPrice === null || isNaN(screenPrice))
+
+    adaptive = prompt("Нужен ли адаптив на сайте?", "да");
     console.log("Название проекта:", getTitle(nameTitle));
 
-    adaptive = (adaptive.toLowerCase() === 'да' || adaptive.toLowerCase() === 'нужен') ? true : false;
+    adaptive = (adaptive.toLowerCase() === 'да' || adaptive.toLowerCase() === 'нужен');
 }
 
 const getAllServicePrices = function() {
     let sum = 0;
     for (let i = 0; i < 2; i++) {
-
-        let price;
+        let number;
         do {
-            price = prompt("Сколько это будет стоить?", 100);
-        } while (!isNumber(price));
-        sum += +price;
+            const input = prompt("Сколько это будет стоить?", 100);
+            number = isNumber(input);
+        } while (number === null || isNaN(number))
+
+        sum += number;
 
         if (i === 0) {
             serviceOne = prompt("Какой дополнительный тип услуги нужен?", "css");
@@ -49,8 +55,7 @@ const getAllServicePrices = function() {
             serviceTwo = prompt("Какой дополнительный тип услуги нужен?", "html");
         }
     }
-
-    return sum
+    return sum;
 }
 
 const getFullPrice = function() {
