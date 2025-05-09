@@ -2,18 +2,18 @@
 
 const appData = {
     nameTitle: "",
-    screens: "",
+    screens: [],
     screenPrice: 0,
     adaptive: true,
     rollback: 10,
     allServicePrices: 0,
     fullPrice: 0,
     servicePercentPrice: 0,
-    serviceOne: "",
-    serviceTwo: "",
+    services: {
+
+    },
     getTitle: function(str) {
-        let newTitle = str[0].toUpperCase() + str.slice(1).toLowerCase();
-        return newTitle
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     },
     isNumber: function(num) {
         if (num === null) return null;
@@ -23,47 +23,78 @@ const appData = {
         return isNaN(number) ? NaN : number;
     },
     asking: function() {
-        appData.nameTitle = prompt("Как называется ваш проект?", "calc");
-        appData.screens = prompt("Какие типы экранов нужно разработать?", "mobile");
         do {
-            const input = prompt("Сколько будет стоить данная работа?", 1000);
-            appData.screenPrice = appData.isNumber(input);
-        } while (appData.screenPrice === null || isNaN(appData.screenPrice))
+            appData.nameTitle = prompt("Как называется ваш проект?", "calc");
+        } while (appData.nameTitle === null || !isNaN(appData.nameTitle))
+
+        for (let i = 0; i < 2; i++) {
+            let name;
+            do {
+                name = prompt("Какие типы экранов нужно разработать?", "mobile");
+                if (name !== null) {
+                    name = name.trim();
+                }
+            } while (name === null || name === "" || !isNaN(name)); //
+
+            let price = 0;
+            do {
+                let input = prompt("Сколько это будет стоить?", 100);
+                price = appData.isNumber(input);
+            } while (price === null || isNaN(price))
+
+            appData.screens.push({ id: i, name: name, price: price });
+        }
+
+        for (let i = 0; i < 2; i++) {
+            let name;
+            do {
+                name = prompt("Какой дополнительный тип услуги нужен?", "css");
+                if (name !== null) {
+                    name = name.trim();
+                }
+            } while (name === null || name === "" || !isNaN(name)); //
+            let number;
+            do {
+                let input = prompt("Сколько это будет стоить?", 100);
+                number = appData.isNumber(input);
+            } while (number === null || isNaN(number))
+
+            let newName = name;
+            if (appData.services.hasOwnProperty(newName)) {
+                newName = `${name}-${i}`;
+                i++;
+            }
+
+            appData.services[newName] = +number;
+        }
 
         appData.adaptive = prompt("Нужен ли адаптив на сайте?", "да");
         console.log("Название проекта:", appData.getTitle(appData.nameTitle));
 
         appData.adaptive = (appData.adaptive.toLowerCase() === 'да' || appData.adaptive.toLowerCase() === 'нужен');
     },
-    getAllServicePrices: function() {
-        let sum = 0;
-        for (let i = 0; i < 2; i++) {
-            let number;
-            do {
-                const input = prompt("Сколько это будет стоить?", 100);
-                number = appData.isNumber(input);
-            } while (number === null || isNaN(number))
+    addPrices: function() {
+        const result = appData.screens.reduce(function(sum, item) {
+            return sum + item.price
+        }, 0)
 
-            sum += number;
-
-            if (i === 0) {
-                appData.serviceOne = prompt("Какой дополнительный тип услуги нужен?", "css");
-            } else if (i === 1) {
-                appData.serviceTwo = prompt("Какой дополнительный тип услуги нужен?", "html");
-            }
+        for (let key in appData.services) {
+            appData.allServicePrices += appData.services[key];
         }
-        return sum;
+
     },
     getFullPrice: function() {
-        return Number(appData.screenPrice) + Number(appData.allServicePrices);
+        appData.fullPrice = Number(appData.screenPrice) + Number(appData.allServicePrices);
+        return appData.fullPrice;
     },
 
     showTypeOf: function(variable) {
-        console.log("Тип переменной", variable, ':', typeof variable);
+        const type = variable === null ? "null" : typeof variable;
+        console.log(`Тип переменной ${variable}: ${type}`);
     },
 
     getServicePercentPrices: function() {
-        return appData.fullPrice - (appData.fullPrice * (appData.rollback / 100));
+        appData.servicePercentPrice = appData.fullPrice - (appData.fullPrice * (appData.rollback / 100));
     },
 
     getRollbackMessage: function(price) {
@@ -81,9 +112,9 @@ const appData = {
     },
     start: function() {
         appData.asking();
-        appData.allServicePrices = appData.getAllServicePrices();
-        appData.fullPrice = appData.getFullPrice();
-        appData.servicePercentPrice = appData.getServicePercentPrices();
+        appData.addPrices();
+        appData.getFullPrice();
+        appData.getServicePercentPrices();
         appData.loger();
     },
 
@@ -94,10 +125,8 @@ const appData = {
         console.log("Типы экранов для разработки:", appData.screens);
         console.log(appData.getRollbackMessage(appData.fullPrice));
         console.log("Стоимость за вычетом процента отката посреднику:", appData.servicePercentPrice);
-
-        for (let key in appData) {
-            console.log(key, ":", this[key])
-        }
+        console.log(appData.services)
+        console.log(appData.screens)
     }
 
 }
